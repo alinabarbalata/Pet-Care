@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "parcel": "^2.14.1"
+  },
+  "scripts": {
+  "start": "npx parcel src/components/Login/Login.html"
+}
+}
