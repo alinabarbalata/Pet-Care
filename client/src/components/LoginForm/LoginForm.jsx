@@ -3,6 +3,7 @@ import AppContext from "../../state/AppContext";
 import { IonIcon } from "@ionic/react";
 import { mail, lockClosed } from "ionicons/icons";
 import UserStore from "../../state/stores/UserStore";
+import { useNavigate } from "react-router-dom";
 
 import "./LoginForm.css";
 
@@ -11,10 +12,17 @@ const LoginForm = ({ showRegisterForm }) => {
   const [password, setPassword] = useState("");
   const globalState = useContext(AppContext);
   const userStore = new UserStore();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await userStore.login(email, password);
+    console.log("Form submitted");
+    try {
+      await userStore.login(email, password);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error caught in handleSubmit:", error);
+    }
   };
 
   return (

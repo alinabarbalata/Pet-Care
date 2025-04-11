@@ -1,56 +1,58 @@
-import { SERVER } from '../../../config/config';
+import { SERVER } from "../../../config/config";
 
 class UserStore {
-  constructor(){
-    this.data={};
+  constructor() {
+    this.data = {};
   }
 
-
-  async login (email, password) {
+  async login(email, password) {
     try {
       const response = await fetch(`${SERVER}/auth/login`, {
-        method: 'post',
+        method: "post",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email,
-          password
-        })
-      })
-      
+          password,
+        }),
+      });
+
       if (!response.ok) {
-        throw response
+        throw response;
       }
       this.data = await response.json();
-      localStorage.setItem('token', this.data.token);
-      console.log('Login response:', this.data, 'Token:', this.data.token);
-      alert('LOGIN SUCCESSFUL!');
+      localStorage.setItem("token", this.data.token);
+      console.log("Login response:", this.data, "Token:", this.data.token);
+      alert("LOGIN SUCCESSFUL!");
     } catch (err) {
-      alert('Login error. Please try again!');
+      console.log("Response status:", err.status);
+      console.log("Response body:", await err.json());
+      alert("Login error. Please try again!");
+      throw error;
     }
   }
 
-  async register(email, password){
-    try{
-      const response=await fetch(`${SERVER}/auth/register`,{
-        method:'post',
-        headers:{
-          'Content-Type':'application/json'
+  async register(email, password) {
+    try {
+      const response = await fetch(`${SERVER}/auth/register`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body:JSON.stringify({
+        body: JSON.stringify({
           email,
-          password
-        })
-      })
+          password,
+        }),
+      });
       if (!response.ok) {
-        throw response
+        throw response;
       }
       this.data = await response.json();
-      console.log('Register response:', this.data);
-      alert('REGISTER SUCCESSFUL!');
-    }catch(err){
-      alert('Register error. Please try again!');
+      console.log("Register response:", this.data);
+      alert("REGISTER SUCCESSFUL!");
+    } catch (err) {
+      alert("Register error. Please try again!");
     }
   }
 }
