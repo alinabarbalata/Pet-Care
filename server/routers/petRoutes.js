@@ -6,11 +6,16 @@ const {
   getAllPets,
   deletePet,
 } = require("../routers/controllers/petController");
-const verifyToken = require("../middleware/authMiddleware");
+const { verifyToken, authorizeRole } = require("../middleware/authMiddleware");
 
-petRouter.post("/pets", verifyToken, createPet);
-petRouter.put("/pets/:pid", verifyToken, updatePet);
-petRouter.get("/pets", verifyToken, getAllPets);
-petRouter.delete("/pets/:pid", verifyToken, deletePet);
+petRouter.post("/pets", verifyToken, authorizeRole("owner"), createPet);
+petRouter.put("/pets/:pid", verifyToken, authorizeRole("owner"), updatePet);
+petRouter.get(
+  "/pets",
+  verifyToken,
+  authorizeRole("owner", "admin"),
+  getAllPets
+);
+petRouter.delete("/pets/:pid", verifyToken, authorizeRole("owner"), deletePet);
 
 module.exports = petRouter;
