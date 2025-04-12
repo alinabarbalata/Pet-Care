@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "run dev",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -13,7 +14,8 @@
     "@ionic/react": "^8.5.2",
     "ionicons": "^7.4.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

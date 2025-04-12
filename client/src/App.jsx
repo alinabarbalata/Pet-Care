@@ -1,24 +1,19 @@
 import React from "react";
-import Navbar from "./components/NavBar";
-import LoginForm from "./components/LoginForm";
-import RegisterForm from "./components/RegisterForm";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from "./components/LoginPage";
+import Dashboard from "./components/Dashboard";
+
 import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [showLogin, setShowLogin] = useState(null);
-  const showLoginForm = () => {
-    setShowLogin(true);
-  };
-  const showRegisterForm = () => {
-    setShowLogin(false);
-  };
   return (
-    <div>
-      <Navbar showLoginForm={showLoginForm} />
-      {showLogin === true && <LoginForm showRegisterForm={showRegisterForm} />}
-      {showLogin === false && <RegisterForm showLoginForm={showLoginForm} />}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+      </Routes>
+    </Router>
   );
 }
 
