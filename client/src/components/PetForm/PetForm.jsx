@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { IonIcon } from "@ionic/react";
-import { paw, heartCircle } from "ionicons/icons";
 import PetStore from "../../state/stores/PetStore";
 
-import "./PetForm.css";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import InputAdornment from "@mui/material/InputAdornment";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import { IonIcon } from "@ionic/react";
+import { paw, heartCircle } from "ionicons/icons";
+import { ThemeProvider } from "@mui/material/styles";
+import Theme from "./Theme";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Button from "@mui/material/Button";
 
 const PetForm = () => {
   const [name, setName] = useState("");
@@ -13,6 +26,7 @@ const PetForm = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedBreed, setSelectedBreed] = useState("");
   const [vaccinated, setVaccinated] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const petStore = new PetStore();
 
   useEffect(() => {
@@ -30,7 +44,7 @@ const PetForm = () => {
         if (Array.isArray(fetchedColors)) {
           setColors(fetchedColors);
         } else {
-          console.error("Failed to fetch breeds");
+          console.error("Failed to fetch colors");
         }
       } catch (err) {
         console.error("Data fetch error:", err);
@@ -40,7 +54,6 @@ const PetForm = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     await petStore.createPet(
       name,
       age,
@@ -49,88 +62,143 @@ const PetForm = () => {
       "cat",
       vaccinated
     );
+    setIsVisible(false);
+    window.location.reload();
   };
 
   return (
-    <div className="add-pet-wrapper">
-      <div className="form-box create-pet">
-        <h1>Add a Pet</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="input-box">
-            <span className="icon">
-              <IonIcon icon={paw} />
-            </span>
-            <input
-              type="text"
-              required
-              placeholder="Name"
+    <Box
+      sx={{
+        width: "40%",
+        bgcolor: "background.paper",
+        p: 2,
+        borderRadius: 2,
+        boxShadow: 3,
+      }}
+    >
+      <Stack spacing={1} sx={{ p: 5, px: 7 }}>
+        <ThemeProvider theme={Theme}>
+          <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
+            <FormHelperText id="outlined-weight-helper-text">
+              Name of the pet
+            </FormHelperText>
+            <OutlinedInput
+              id="outlined-adornment-weight"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IonIcon icon={paw} />
+                </InputAdornment>
+              }
             />
-          </div>
-
-          <div className="input-box">
-            <span className="icon">
-              <IonIcon icon={heartCircle} />
-            </span>
-            <input
+          </FormControl>
+          <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
+            <FormHelperText id="outlined-weight-helper-text">
+              Age
+            </FormHelperText>
+            <OutlinedInput
+              id="outlined-adornment-weight"
               type="number"
-              required
-              placeholder="Age"
-              min={1}
-              max={35}
               value={age}
               onChange={(e) => setAge(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IonIcon icon={heartCircle} />
+                </InputAdornment>
+              }
+              inputProps={{
+                min: 0,
+              }}
+              sx={{
+                '& input[type="number"]': {
+                  "&::-webkit-inner-spin-button": {
+                    display: "none",
+                  },
+                  "&::-webkit-outer-spin-button": {
+                    display: "none",
+                  },
+                  MozAppearance: "textfield",
+                },
+              }}
             />
-          </div>
+          </FormControl>
 
-          <div className="input-box">
-            <select
-              name="color"
-              value={selectedColor}
-              onChange={(e) => setSelectedColor(e.target.value)}
-              required
-            >
-              <option value="">Select Color</option>
-              {colors.map((color) => (
-                <option key={color._id} value={color.name}>
-                  {color.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="input-box">
-            <select
-              name="breed"
+          <FormControl sx={{ m: 1 }} variant="outlined">
+            <FormHelperText id="outlined-weight-helper-text">
+              Breed
+            </FormHelperText>
+            <Select
+              labelId="demo-customized-select-label"
+              id="demo-customized-select"
               value={selectedBreed}
               onChange={(e) => setSelectedBreed(e.target.value)}
-              required
             >
-              <option value="">Select Breed</option>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
               {breeds.map((breed) => (
-                <option key={breed._id} value={breed.name}>
+                <MenuItem key={breed._id} value={breed._id}>
                   {breed.name}
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </div>
-
-          <div className="checkbox-group">
-            <input
-              type="checkbox"
-              checked={vaccinated}
-              onChange={(e) => setVaccinated(e.target.checked)}
-            />
-            <label>My pet is vaccinated</label>
-          </div>
-
-          <button type="submit" className="btn">
-            Add Pet
-          </button>
-        </form>
-      </div>
-    </div>
+            </Select>
+          </FormControl>
+          <FormControl sx={{ m: 1 }} variant="outlined">
+            <FormHelperText id="outlined-weight-helper-text">
+              Color
+            </FormHelperText>
+            <Select
+              labelId="demo-customized-select-label"
+              id="demo-customized-select"
+              value={selectedColor}
+              onChange={(e) => setSelectedColor(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {colors.map((color) => (
+                <MenuItem key={color._id} value={color._id}>
+                  {color.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <RadioGroup
+              row
+              name="row-radio-buttons-group"
+              value={vaccinated}
+              onChange={(e) => setVaccinated(e.target.value === "true")}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <FormControlLabel
+                value="true"
+                control={<Radio color="success" />}
+                label="Vaccinated"
+              />
+              <FormControlLabel
+                value="false"
+                control={<Radio color="success" />}
+                label="Not vaccinated"
+              />
+            </RadioGroup>
+          </FormControl>
+        </ThemeProvider>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleSubmit}
+          sx={{ borderRadius: "12px" }}
+        >
+          Create pet
+        </Button>
+      </Stack>
+    </Box>
   );
 };
 

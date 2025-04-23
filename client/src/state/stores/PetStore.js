@@ -42,15 +42,42 @@ class PetStore {
         throw response;
       }
       const data = await response.json();
+      return data.pets || [];
       console.log("Get pet response:", data);
     } catch (err) {
       alert("Error. Please try again!");
     }
   }
-
+  async deletePet(petId) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${SERVER}/api/pets/${petId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw response;
+      }
+      const data = await response.json();
+      console.log("Delete pet response:", data);
+      window.location.reload();
+    } catch (err) {
+      alert("Error. Please try again!");
+    }
+  }
   async getAllBreeds() {
     try {
-      const response = await fetch(`${SERVER}/admin/breeds`);
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${SERVER}/admin/breeds`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         throw response;
       }
@@ -65,10 +92,14 @@ class PetStore {
 
   async getAllColors() {
     try {
-      const response = await fetch(`${SERVER}/admin/colors`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch colors");
-      }
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${SERVER}/admin/colors`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await response.json();
       return data.colors || [];

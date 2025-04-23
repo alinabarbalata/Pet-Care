@@ -2,7 +2,7 @@
     position: fixed;
     top: 10vh;
     left: 0; 
-    width: 40vh;
+    width: 20vw;
     height: 100vh;
     background-color: rgba(37, 138, 37, 0.9);
     transition: left 0.3s ease;
@@ -21,7 +21,7 @@
     text-decoration: none;
     font-size: 1.1em;
     font-weight: bold;
-    color: white;
+    color: rgb(45, 45, 45);
     padding: 12px;
     border-radius: 6px;
     transition: background-color 0.3s, transform 0.3s;

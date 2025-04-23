@@ -29,7 +29,12 @@ adminRouter.post(
   authorizeRole("admin"),
   updateBreed
 );
-adminRouter.get("/breeds", verifyToken, authorizeRole("admin"), getAllBreeds);
+adminRouter.get(
+  "/breeds",
+  verifyToken,
+  authorizeRole("admin", "owner"),
+  getAllBreeds
+);
 adminRouter.delete(
   "/breeds/:bid",
   verifyToken,
@@ -45,7 +50,12 @@ adminRouter.post(
   authorizeRole("admin"),
   updateColor
 );
-adminRouter.get("/colors", verifyToken, authorizeRole("admin"), getAllColors);
+adminRouter.get(
+  "/colors",
+  verifyToken,
+  authorizeRole("admin", "owner"),
+  getAllColors
+);
 adminRouter.delete(
   "/colors/:cid",
   verifyToken,
