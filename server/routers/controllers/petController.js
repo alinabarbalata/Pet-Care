@@ -17,7 +17,10 @@ const createPet = async (req, res) => {
     await newPet.save();
     res.status(201).json({ message: "Pet created successfully", pet: newPet });
   } catch (error) {
-    res.status(500).json({ message: "Error creating pet", error });
+    console.error("Error creating appointment:", error);
+    res
+      .status(500)
+      .json({ message: "Error creating appointment", error: error.message });
   }
 };
 
@@ -46,12 +49,27 @@ const getAllPets = async (req, res) => {
     } else if (req.user.role === "owner") {
       pets = await Pet.find({ owner: req.user._id });
     }
-    if (pets.length === 0) {
-      return res.status(404).json({ message: "No pets found" });
-    }
     res.status(200).json({ message: "Pets retrieved successfully", pets });
   } catch (error) {
     res.status(500).json({ message: "Error fetching pets", error });
+  }
+};
+
+const getOnePet = async (req, res) => {
+  try {
+    let pet = await Pet.findOne({ _id: req.params.pid });
+    if (!pet) {
+      return res.status(404).json({ message: "Pet not found" });
+    }
+    if (
+      req.user.role === "owner" &&
+      pet.owner.toString() !== req.user._id.toString()
+    ) {
+      return res.status(403).json({ message: "Access denied. Not your pet." });
+    }
+    res.status(200).json({ message: "Pet retrieved successfully", pet });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching pet", error });
   }
 };
 
@@ -70,4 +88,4 @@ const deletePet = async (req, res) => {
       .json({ message: "Error deleting pet", error: error.message || error });
   }
 };
-module.exports = { createPet, updatePet, getAllPets, deletePet };
+module.exports = { createPet, updatePet, getAllPets, deletePet, getOnePet };

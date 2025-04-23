@@ -1,10 +1,21 @@
 const express = require("express");
 const petRouter = express.Router();
 const {
+  createAppointment,
+  updateAppointment,
+  getAllAppointmentsForPet,
+  deleteAppointment,
+  changeAppointmentStatus,
+  getAllAppointments,
+  getOneAppointment,
+} = require("../routers/controllers/appointmentController");
+
+const {
   createPet,
   updatePet,
-  getAllPets,
   deletePet,
+  getAllPets,
+  getOnePet,
 } = require("../routers/controllers/petController");
 const { verifyToken, authorizeRole } = require("../middleware/authMiddleware");
 
@@ -16,6 +27,61 @@ petRouter.get(
   authorizeRole("owner", "admin"),
   getAllPets
 );
-petRouter.delete("/pets/:pid", verifyToken, authorizeRole("owner"), deletePet);
+petRouter.get(
+  "/pets/:pid",
+  verifyToken,
+  authorizeRole("owner", "admin"),
+  getOnePet
+);
 
+petRouter.delete(
+  "/pets/:pid",
+  verifyToken,
+  authorizeRole("owner", "admin"),
+  deletePet
+);
+
+//appointment routes
+petRouter.post(
+  "/pets/:pid/appointments",
+  verifyToken,
+  authorizeRole("owner"),
+  createAppointment
+);
+petRouter.put(
+  "/pets/:pid/appointments/:aid",
+  verifyToken,
+  authorizeRole("owner"),
+  updateAppointment
+);
+petRouter.get(
+  "/pets/:pid/appointments",
+  verifyToken,
+  authorizeRole("owner", "vet", "admin"),
+  getAllAppointmentsForPet
+);
+petRouter.delete(
+  "/pets/:pid/appointments/:aid",
+  verifyToken,
+  authorizeRole("admin"),
+  deleteAppointment
+);
+petRouter.patch(
+  "/pets/:pid/appointments/:aid/status",
+  verifyToken,
+  authorizeRole("owner", "vet", "admin"),
+  changeAppointmentStatus
+);
+petRouter.get(
+  "/appointments",
+  verifyToken,
+  authorizeRole("admin", "vet", "owner"),
+  getAllAppointments
+);
+petRouter.get(
+  "/pets/:pid/appointments/:aid",
+  verifyToken,
+  authorizeRole("vet", "owner", "admin"),
+  getOneAppointment
+);
 module.exports = petRouter;
