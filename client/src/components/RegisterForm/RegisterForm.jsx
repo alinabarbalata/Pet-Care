@@ -2,19 +2,17 @@ import React, { useState, useContext } from "react";
 import AppContext from "../../state/AppContext";
 import { IonIcon } from "@ionic/react";
 import { mail, lockClosed } from "ionicons/icons";
-import UserStore from "../../state/stores/UserStore";
 
 import "./RegisterForm.css";
 
 const RegisterForm = ({ showLoginForm }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const globalState = useContext(AppContext);
-  const userStore = new UserStore();
+  const { user } = useContext(AppContext);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    await userStore.register(email, password);
+    await user.register(email, password);
   };
   return (
     <>

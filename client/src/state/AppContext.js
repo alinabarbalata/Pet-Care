@@ -1,5 +1,9 @@
 import { createContext } from "react";
 
-export default createContext({
-    user:null,
-})
+const AppContext = createContext({
+  user: null,
+  pet: null,
+  appointment: null,
+});
+
+export default AppContext;

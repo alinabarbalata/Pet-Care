@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from "react";
-import PetStore from "../../state/stores/PetStore";
+import React, { useState, useEffect, useContext } from "react";
 import PetCard from "../PetCard";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import PetForm from "../PetForm";
 import Box from "@mui/material/Box";
-
+import AppContext from "../../state/AppContext";
 const MyPets = () => {
-  const [pets, setPets] = useState([]);
-  const petStore = new PetStore();
+  const globalState = useContext(AppContext);
   const [isAddingPet, setIsAddingPet] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPets = async () => {
-      const petsData = await petStore.getAllPets();
-      setPets(petsData);
+      if (globalState.pet.data.pets.length === 0) {
+        await globalState.pet.getAllPets();
+      }
+      setIsLoading(false);
     };
+
     fetchPets();
-  }, []);
+  }, [globalState.pet]);
 
   const handleAddPetClick = () => {
     setIsAddingPet(true);
   };
-
+  if (isLoading) {
+    return <div>Loading pets...</div>;
+  }
   return (
     <>
       <Box
@@ -68,7 +72,7 @@ const MyPets = () => {
               </Button>
             </Stack>
 
-            {pets.map((pet) => (
+            {globalState.pet.data.pets.map((pet) => (
               <PetCard key={pet._id} pet={pet} />
             ))}
           </>

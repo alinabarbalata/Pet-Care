@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import PetStore from "../../state/stores/PetStore";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import AppContext from "../../state/AppContext";
 
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -21,28 +22,28 @@ import Button from "@mui/material/Button";
 const PetForm = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
-  const [colors, setColors] = useState([]);
-  const [breeds, setBreeds] = useState([]);
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedBreed, setSelectedBreed] = useState("");
   const [vaccinated, setVaccinated] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const petStore = new PetStore();
+  const { pet } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [fetchedBreeds, fetchedColors] = await Promise.all([
-          petStore.getAllBreeds(),
-          petStore.getAllColors(),
+        const [breeds, colors] = await Promise.all([
+          pet.getAllBreeds(),
+          pet.getAllColors(),
         ]);
-        if (Array.isArray(fetchedBreeds)) {
-          setBreeds(fetchedBreeds);
+
+        if (Array.isArray(breeds)) {
+          pet.data.breeds = breeds;
         } else {
           console.error("Failed to fetch breeds");
         }
-        if (Array.isArray(fetchedColors)) {
-          setColors(fetchedColors);
+
+        if (Array.isArray(colors)) {
+          pet.data.colors = colors;
         } else {
           console.error("Failed to fetch colors");
         }
@@ -50,11 +51,12 @@ const PetForm = () => {
         console.error("Data fetch error:", err);
       }
     };
+
     fetchData();
-  }, []);
+  }, [pet]);
 
   const handleSubmit = async (e) => {
-    await petStore.createPet(
+    await pet.createPet(
       name,
       age,
       selectedBreed,
@@ -137,7 +139,7 @@ const PetForm = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {breeds.map((breed) => (
+              {pet.data.breeds.map((breed) => (
                 <MenuItem key={breed._id} value={breed._id}>
                   {breed.name}
                 </MenuItem>
@@ -157,7 +159,7 @@ const PetForm = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {colors.map((color) => (
+              {pet.data.colors.map((color) => (
                 <MenuItem key={color._id} value={color._id}>
                   {color.name}
                 </MenuItem>

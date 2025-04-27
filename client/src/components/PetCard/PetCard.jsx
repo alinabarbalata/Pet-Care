@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import PetStore from "../../state/stores/PetStore";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -8,7 +7,6 @@ import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 
 const PetCard = ({ pet }) => {
-  const petStore = new PetStore();
   const [isCardClicked, setIsCardClicked] = useState(false);
 
   const handleCardClick = async (e) => {
