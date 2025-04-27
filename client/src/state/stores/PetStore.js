@@ -1,6 +1,13 @@
 import { SERVER } from "../../../config/config";
 
 class PetStore {
+  constructor() {
+    this.data = {
+      pets: [],
+      breeds: [],
+      colors: [],
+    };
+  }
   async createPet(name, age, breed, color, type, vaccinated) {
     try {
       const token = localStorage.getItem("token");
@@ -24,6 +31,8 @@ class PetStore {
       }
       const data = await response.json();
       console.log("Create pet response:", data);
+      this.data.pets = [...this.data.pets, data];
+      return this.data.pets;
     } catch (err) {
       alert("Error. Please try again!");
     }
@@ -42,8 +51,10 @@ class PetStore {
         throw response;
       }
       const data = await response.json();
-      return data.pets || [];
-      console.log("Get pet response:", data);
+      this.data.pets = data.pets || [];
+      console.log("Get pet response:", this.data.pets);
+
+      return this.data.pets;
     } catch (err) {
       alert("Error. Please try again!");
     }
@@ -63,7 +74,8 @@ class PetStore {
       }
       const data = await response.json();
       console.log("Delete pet response:", data);
-      window.location.reload();
+      this.data.pets = this.data.pets.filter((pet) => pet._id !== petId);
+      return this.data.pets;
     } catch (err) {
       alert("Error. Please try again!");
     }
@@ -83,7 +95,8 @@ class PetStore {
       }
 
       const data = await response.json();
-      return data.breeds || [];
+      this.data.breeds = data.breeds || [];
+      return this.data.breeds;
     } catch (err) {
       alert("Failed to load breeds. Please try again!");
       return [];
@@ -102,7 +115,8 @@ class PetStore {
       });
 
       const data = await response.json();
-      return data.colors || [];
+      this.data.colors = data.colors || [];
+      return this.data.colors;
     } catch (err) {
       console.error("Error fetching colors:", err);
       alert("Failed to load colors. Please try again!");

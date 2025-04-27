@@ -55,6 +55,18 @@ class UserStore {
       alert("Register error. Please try again!");
     }
   }
+  async logout() {
+    try {
+      this.data = {};
+      localStorage.removeItem("token");
+
+      console.log("Logout successful!");
+      alert("You have been logged out.");
+    } catch (err) {
+      console.log("Error during logout:", err);
+      alert("Logout error. Please try again.");
+    }
+  }
 }
 
 export default UserStore;
