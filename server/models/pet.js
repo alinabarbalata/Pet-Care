@@ -11,12 +11,8 @@ const petSchema = new mongoose.Schema(
       required: true,
       min: [1, "Age must be a positive number"],
     },
-    breed: {
-      type: String,
-    },
-    color: {
-      type: String,
-    },
+    breed: { type: mongoose.Schema.Types.ObjectId, ref: "Breed" },
+    color: { type: mongoose.Schema.Types.ObjectId, ref: "Color" },
     type: {
       type: String,
       enum: ["cat"],

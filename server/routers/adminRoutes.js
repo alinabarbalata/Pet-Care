@@ -79,7 +79,7 @@ adminRouter.post(
 adminRouter.get(
   "/statuses",
   verifyToken,
-  authorizeRole("admin"),
+  authorizeRole("admin", "vet", "owner"),
   getAllStatuses
 );
 adminRouter.delete(

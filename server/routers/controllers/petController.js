@@ -45,9 +45,15 @@ const getAllPets = async (req, res) => {
   let pets = [];
   try {
     if (req.user.role === "admin") {
-      pets = await Pet.find();
+      pets = await Pet.find()
+        .populate("owner")
+        .populate("breed")
+        .populate("color");
     } else if (req.user.role === "owner") {
-      pets = await Pet.find({ owner: req.user._id });
+      pets = await Pet.find({ owner: req.user._id })
+        .populate("owner")
+        .populate("breed")
+        .populate("color");
     }
     res.status(200).json({ message: "Pets retrieved successfully", pets });
   } catch (error) {
@@ -57,13 +63,16 @@ const getAllPets = async (req, res) => {
 
 const getOnePet = async (req, res) => {
   try {
-    let pet = await Pet.findOne({ _id: req.params.pid });
+    let pet = await Pet.findOne({ _id: req.params.pid })
+      .populate("owner")
+      .populate("breed")
+      .populate("color");
     if (!pet) {
       return res.status(404).json({ message: "Pet not found" });
     }
     if (
       req.user.role === "owner" &&
-      pet.owner.toString() !== req.user._id.toString()
+      pet.owner._id.toString() !== req.user._id.toString()
     ) {
       return res.status(403).json({ message: "Access denied. Not your pet." });
     }

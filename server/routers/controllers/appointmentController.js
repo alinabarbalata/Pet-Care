@@ -1,16 +1,19 @@
 const Appointment = require("../../models/appointment");
 const Status = require("../../models/appointmentStatus");
+const User = require("../../models/user");
 
 const createAppointment = async (req, res) => {
   try {
     const { vet, date, notes } = req.body;
-    const vetExists = await Vet.findById(vet);
-    if (!vetExists) {
+    const vetExists = await User.findById(vet);
+    if (!vetExists || vetExists.role !== "vet") {
       return res.status(400).json({ message: "Vet does not exist" });
     }
+
     const petId = req.params.pid;
     const ownerId = req.user._id;
     const pendingStatus = await Status.findOne({ name: "Pending" });
+
     const newAppointment = new Appointment({
       owner: ownerId,
       pet: petId,
@@ -21,6 +24,7 @@ const createAppointment = async (req, res) => {
     });
 
     await newAppointment.save();
+
     res.status(201).json({
       message: "Appointment created successfully",
       appointment: newAppointment,
@@ -41,8 +45,11 @@ const updateAppointment = async (req, res) => {
         .status(403)
         .json({ message: "Access denied. Not your pet's appointment." });
     }
-
-    appointment.set(req.body);
+    const pendingStatus = await Status.findOne({ name: "Pending" });
+    if (!pendingStatus) {
+      return res.status(400).json({ message: "Pending status not found" });
+    }
+    appointment.set({ ...req.body, status: pendingStatus._id });
 
     await appointment.save();
 
@@ -57,12 +64,12 @@ const updateAppointment = async (req, res) => {
 const getAllAppointmentsForPet = async (req, res) => {
   let appointments = [];
   try {
-    appointments = await Appointment.find({ pet: req.params.pid });
-    if (appointment.owner.toString() !== req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({ message: "Access denied. Not your pet's appointments." });
-    }
+    appointments = await Appointment.find({ pet: req.params.pid })
+      .populate("pet")
+      .populate("vet")
+      .populate("owner")
+      .populate("status");
+
     res
       .status(200)
       .json({ message: "Appointments retrieved successfully", appointments });
@@ -133,12 +140,25 @@ const getAllAppointments = async (req, res) => {
   let appointments = [];
   try {
     if (req.user.role === "admin") {
-      appointments = await Appointment.find();
+      appointments = await Appointment.find()
+        .populate("pet")
+        .populate("vet")
+        .populate("owner")
+        .populate("status");
     } else if (req.user.role === "vet") {
-      appointments = await Appointment.find({ vet: req.user._id });
+      appointments = await Appointment.find({ vet: req.user._id })
+        .populate("pet")
+        .populate("vet")
+        .populate("owner")
+        .populate("status");
     } else if (req.user.role === "owner") {
-      appointments = await Appointment.find({ owner: req.user._id });
+      appointments = await Appointment.find({ owner: req.user._id })
+        .populate("pet")
+        .populate("vet")
+        .populate("owner")
+        .populate("status");
     }
+
     res
       .status(200)
       .json({ message: "Appointments retrieved successfully", appointments });
@@ -149,13 +169,17 @@ const getAllAppointments = async (req, res) => {
 
 const getOneAppointment = async (req, res) => {
   try {
-    appointment = await Appointment.findOne({ _id: req.params.aid });
+    appointment = await Appointment.findOne({ _id: req.params.aid })
+      .populate("pet")
+      .populate("vet")
+      .populate("owner")
+      .populate("status");
     if (!appointment) {
       return res.status(404).json({ message: "Appointment not found" });
     }
     if (
       req.user.role === "owner" &&
-      appointment.owner.toString() !== req.user._id.toString()
+      appointment.owner._id.toString() !== req.user._id.toString()
     ) {
       return res
         .status(403)

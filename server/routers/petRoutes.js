@@ -84,4 +84,5 @@ petRouter.get(
   authorizeRole("vet", "owner", "admin"),
   getOneAppointment
 );
+
 module.exports = petRouter;
