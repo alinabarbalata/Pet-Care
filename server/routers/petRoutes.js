@@ -8,7 +8,7 @@ const {
   changeAppointmentStatus,
   getAllAppointments,
   getOneAppointment,
-} = require("../routers/controllers/appointmentController");
+} = require("../routers/controllers/appointment-controller/appointmentController");
 
 const {
   createPet,
@@ -16,7 +16,7 @@ const {
   deletePet,
   getAllPets,
   getOnePet,
-} = require("../routers/controllers/petController");
+} = require("../routers/controllers/pet-controller/petController");
 const { verifyToken, authorizeRole } = require("../middleware/authMiddleware");
 
 petRouter.post("/pets", verifyToken, authorizeRole("owner"), createPet);

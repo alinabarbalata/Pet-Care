@@ -1,4 +1,4 @@
-const Status = require("../../models/appointmentStatus");
+const Status = require("../../../models/appointment-models/appointmentStatus");
 
 const createStatus = async (req, res) => {
   try {

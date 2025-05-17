@@ -6,21 +6,25 @@ const {
   getAllBreeds,
   deleteBreed,
   updateBreed,
-} = require("../routers/controllers/breedController");
+} = require("../routers/controllers/pet-controller/breedController");
 const {
   createColor,
   updateColor,
   getAllColors,
   deleteColor,
-} = require("./controllers/colorController");
-
+} = require("./controllers/pet-controller/colorController");
 const {
   createStatus,
   updateStatus,
   getAllStatuses,
   deleteStatus,
-} = require("./controllers/appointmentStatusController");
-
+} = require("./controllers/appointment-controller/appointmentStatusController");
+const {
+  createSymptom,
+  updateSymptom,
+  getAllSymptoms,
+  deleteSymptom,
+} = require("./controllers/health-controller/healthQuizController");
 //pet-breed CRUD
 adminRouter.post("/breeds", verifyToken, authorizeRole("admin"), createBreed);
 adminRouter.post(
@@ -89,4 +93,29 @@ adminRouter.delete(
   deleteStatus
 );
 
+//disease-symptom CRUD
+adminRouter.post(
+  "/symptoms",
+  verifyToken,
+  authorizeRole("admin"),
+  createSymptom
+);
+adminRouter.post(
+  "/symptoms/:sid",
+  verifyToken,
+  authorizeRole("admin"),
+  updateSymptom
+);
+adminRouter.get(
+  "/symptoms",
+  verifyToken,
+  authorizeRole("admin", "vet", "owner"),
+  getAllSymptoms
+);
+adminRouter.delete(
+  "/symptoms/:sid",
+  verifyToken,
+  authorizeRole("admin"),
+  deleteSymptom
+);
 module.exports = adminRouter;

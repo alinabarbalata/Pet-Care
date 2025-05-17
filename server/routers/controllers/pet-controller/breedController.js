@@ -1,4 +1,4 @@
-const Breed = require("../../models/breed");
+const Breed = require("../../../models/pet-models/breed");
 
 const createBreed = async (req, res) => {
   try {
