@@ -24,6 +24,10 @@ const {
   updateSymptom,
   getAllSymptoms,
   deleteSymptom,
+  createDisease,
+  updateDisease,
+  getAllDiseases,
+  deleteDisease,
 } = require("./controllers/health-controller/healthQuizController");
 //pet-breed CRUD
 adminRouter.post("/breeds", verifyToken, authorizeRole("admin"), createBreed);
@@ -117,5 +121,29 @@ adminRouter.delete(
   verifyToken,
   authorizeRole("admin"),
   deleteSymptom
+);
+adminRouter.post(
+  "/diseases",
+  verifyToken,
+  authorizeRole("admin"),
+  createDisease
+);
+adminRouter.post(
+  "/diseases/:did",
+  verifyToken,
+  authorizeRole("admin"),
+  updateDisease
+);
+adminRouter.get(
+  "/diseases",
+  verifyToken,
+  authorizeRole("admin", "vet", "owner"),
+  getAllDiseases
+);
+adminRouter.delete(
+  "/diseases/:did",
+  verifyToken,
+  authorizeRole("admin"),
+  deleteDisease
 );
 module.exports = adminRouter;
