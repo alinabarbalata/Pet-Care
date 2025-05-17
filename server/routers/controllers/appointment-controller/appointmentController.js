@@ -1,6 +1,6 @@
-const Appointment = require("../../models/appointment");
-const Status = require("../../models/appointmentStatus");
-const User = require("../../models/user");
+const Appointment = require("../../../models/appointment-models/appointment");
+const Status = require("../../../models/appointment-models/appointmentStatus");
+const User = require("../../../models/user-models/user");
 
 const createAppointment = async (req, res) => {
   try {
