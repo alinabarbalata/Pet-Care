@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 import PetForm from "../PetForm";
 import Box from "@mui/material/Box";
 import AppContext from "../../state/AppContext";
+import PetsAdminView from "../PetsAdminView";
 const MyPets = () => {
   const globalState = useContext(AppContext);
   const [isAddingPet, setIsAddingPet] = useState(false);
@@ -15,6 +16,7 @@ const MyPets = () => {
       if (globalState.pet.data.pets.length === 0) {
         await globalState.pet.getAllPets();
       }
+
       setIsLoading(false);
     };
 
@@ -41,42 +43,46 @@ const MyPets = () => {
           overflowX: "auto",
         }}
       >
-        {isAddingPet ? (
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <PetForm />
-          </Box>
-        ) : (
-          <>
-            <Stack
-              direction="row"
-              spacing={2}
+        {globalState.user.data.role === "owner" ? (
+          isAddingPet ? (
+            <Box
               sx={{
-                justifyContent: "flex-end",
                 width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <Button
-                variant="contained"
-                sx={{ borderRadius: "30px", backgroundColor: "green" }}
-                onClick={handleAddPetClick}
+              <PetForm />
+            </Box>
+          ) : (
+            <>
+              <Stack
+                direction="row"
+                spacing={2}
+                sx={{
+                  justifyContent: "flex-end",
+                  width: "100%",
+                }}
               >
-                Add a pet
-              </Button>
-            </Stack>
+                <Button
+                  variant="contained"
+                  sx={{ borderRadius: "30px", backgroundColor: "green" }}
+                  onClick={handleAddPetClick}
+                >
+                  Add a pet
+                </Button>
+              </Stack>
 
-            {globalState.pet.data.pets.map((pet) => (
-              <PetCard key={pet._id} pet={pet} />
-            ))}
-          </>
-        )}
+              {globalState.pet.data.pets.map((pet) => (
+                <PetCard key={pet._id} pet={pet} />
+              ))}
+            </>
+          )
+        ) : globalState.user.data.role === "admin" ? (
+          <PetsAdminView />
+        ) : null}
       </Box>
     </>
   );

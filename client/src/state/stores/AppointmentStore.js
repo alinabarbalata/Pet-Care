@@ -5,6 +5,7 @@ class AppointmentStore {
     this.data = {
       appointments: [],
       vets: [],
+      statuses: [],
     };
   }
   async getAllVets() {
@@ -126,6 +127,71 @@ class AppointmentStore {
       const appointments = await this.getAllAppointments();
       this.data.appointments = appointments;
       return this.data;
+    } catch (err) {
+      alert("Error. Please try again!");
+    }
+  }
+
+  async getAllStatuses() {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${SERVER}/admin/statuses`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw response;
+      }
+      const data = await response.json();
+      this.data.statuses = data.statuses || [];
+      return this.data.statuses;
+    } catch (err) {
+      alert("Error. Please try again!");
+    }
+  }
+
+  async getOneAppointment(pet, appointment) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${SERVER}/api/pets/${pet}/appointments/${appointment}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw response;
+      }
+      const data = await response.json();
+      return data.appointment;
+    } catch (err) {
+      alert("Error. Please try again!");
+    }
+  }
+
+  async getAllAppointmentsForPet(pet) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${SERVER}/api/pets/${pet}/appointments`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw response;
+      }
+      const data = await response.json();
+      console.log("Get All Appointments for pet response: ", data);
+      return data.appointments;
     } catch (err) {
       alert("Error. Please try again!");
     }

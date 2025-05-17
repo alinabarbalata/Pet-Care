@@ -23,7 +23,17 @@ class UserStore {
       }
       this.data = await response.json();
       localStorage.setItem("token", this.data.token);
-      console.log("Login response:", this.data, "Token:", this.data.token);
+      if (this.data.role) {
+        localStorage.setItem("role", this.data.role);
+      }
+      console.log(
+        "Login response:",
+        this.data,
+        "Token:",
+        this.data.token,
+        "Role: ",
+        this.data.role
+      );
       alert("LOGIN SUCCESSFUL!");
     } catch (err) {
       console.log("Response status:", err.status);

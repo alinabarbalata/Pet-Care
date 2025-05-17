@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import Dashboard from "./components/Dashboard";
+import AuthGuard from "./components/AuthGuard";
 
 import { useState } from "react";
 import AppContext from "./state/AppContext";
@@ -27,7 +28,15 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/dashboard/*" element={<Dashboard />} />
+
+          <Route
+            path="/dashboard/*"
+            element={
+              <AuthGuard>
+                <Dashboard />
+              </AuthGuard>
+            }
+          />
         </Routes>
       </Router>
     </AppContext.Provider>

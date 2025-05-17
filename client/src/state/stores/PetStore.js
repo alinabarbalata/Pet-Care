@@ -123,6 +123,26 @@ class PetStore {
       return [];
     }
   }
+
+  async getOnePet(petId) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${SERVER}/api/pets/${petId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw response;
+      }
+      const data = await response.json();
+      return data.pet;
+    } catch (err) {
+      alert("Error. Please try again!");
+    }
+  }
 }
 
 export default PetStore;

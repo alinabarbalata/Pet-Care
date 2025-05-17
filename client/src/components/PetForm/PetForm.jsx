@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import AppContext from "../../state/AppContext";
 
 import Stack from "@mui/material/Stack";
@@ -24,6 +23,8 @@ const PetForm = () => {
   const [age, setAge] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedBreed, setSelectedBreed] = useState("");
+  const [breeds, setBreeds] = useState([]);
+  const [colors, setColors] = useState([]);
   const [vaccinated, setVaccinated] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const { pet } = useContext(AppContext);
@@ -37,13 +38,13 @@ const PetForm = () => {
         ]);
 
         if (Array.isArray(breeds)) {
-          pet.data.breeds = breeds;
+          setBreeds(breeds);
         } else {
           console.error("Failed to fetch breeds");
         }
 
         if (Array.isArray(colors)) {
-          pet.data.colors = colors;
+          setColors(colors);
         } else {
           console.error("Failed to fetch colors");
         }
@@ -139,7 +140,7 @@ const PetForm = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {pet.data.breeds.map((breed) => (
+              {breeds.map((breed) => (
                 <MenuItem key={breed._id} value={breed._id}>
                   {breed.name}
                 </MenuItem>
@@ -159,7 +160,7 @@ const PetForm = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {pet.data.colors.map((color) => (
+              {colors.map((color) => (
                 <MenuItem key={color._id} value={color._id}>
                   {color.name}
                 </MenuItem>
