@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Stack,
   Box,
@@ -6,7 +7,6 @@ import {
   FormControl,
   Button,
   TextField,
-  Avatar,
   Typography,
   Chip,
   Select,
@@ -27,6 +27,7 @@ const AppointmentCard = ({
 }) => {
   const [selectedStatus, setSelectedStatus] = useState("");
   const globalState = useContext(AppContext);
+  const navigate = useNavigate();
   useEffect(() => {
     if (appointment?.status?.name && selectedStatus === "") {
       setSelectedStatus(appointment.status.name);
@@ -64,7 +65,9 @@ const AppointmentCard = ({
       alert("Error. Please try again.");
     }
   };
-
+  const handleSeeDetailsAboutPet = (pid) => {
+    navigate(`/dashboard/mypets/${pid}`);
+  };
   return (
     <ThemeProvider theme={AppointmentTheme} key={appointment._id}>
       <Box
@@ -263,12 +266,13 @@ const AppointmentCard = ({
                     if (globalState.user?.data?.role === "owner") {
                       onEdit(appointment);
                     } else {
+                      handleSeeDetailsAboutPet(appointment.pet._id);
                     }
                   }}
                 >
                   {globalState.user?.data?.role === "owner"
                     ? "Update Appointment"
-                    : "See details"}
+                    : "See details about pet"}
                 </Button>
                 <Button
                   variant="outlined"

@@ -3,11 +3,12 @@ const Disease = require("../../../models/health-models/disease");
 
 const createSymptom = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, category } = req.body;
 
     const newSymptom = new Symptom({
       name,
       description,
+      category,
     });
     await newSymptom.save();
     res
@@ -67,12 +68,13 @@ const deleteSymptom = async (req, res) => {
 
 const createDisease = async (req, res) => {
   try {
-    const { name, description, symptoms } = req.body;
+    const { name, description, symptoms, severity } = req.body;
 
     const newDisease = new Disease({
       name,
       description,
       symptoms,
+      severity,
     });
     await newDisease.save();
     res.status(200).json({ message: "Disease added successfully", newDisease });

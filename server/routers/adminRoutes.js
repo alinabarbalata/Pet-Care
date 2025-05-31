@@ -28,7 +28,8 @@ const {
   updateDisease,
   getAllDiseases,
   deleteDisease,
-} = require("./controllers/health-controller/healthQuizController");
+} = require("./controllers/health-controller/diseaseController");
+
 //pet-breed CRUD
 adminRouter.post("/breeds", verifyToken, authorizeRole("admin"), createBreed);
 adminRouter.post(

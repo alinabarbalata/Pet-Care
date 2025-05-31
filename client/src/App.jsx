@@ -10,6 +10,7 @@ import AppContext from "./state/AppContext";
 import UserStore from "./state/stores/UserStore";
 import PetStore from "./state/stores/PetStore";
 import AppointmentStore from "./state/stores/AppointmentStore";
+import HealthStore from "./state/stores/HealthStore";
 
 import "./App.css";
 
@@ -17,12 +18,14 @@ function App() {
   const [userStore] = useState(new UserStore());
   const [petStore] = useState(new PetStore());
   const [appointmentStore] = useState(new AppointmentStore());
+  const [healthStore] = useState(new HealthStore());
   return (
     <AppContext.Provider
       value={{
         user: userStore,
         pet: petStore,
         appointment: appointmentStore,
+        health: healthStore,
       }}
     >
       <Router>

@@ -17,6 +17,11 @@ const {
   getAllPets,
   getOnePet,
 } = require("../routers/controllers/pet-controller/petController");
+const {
+  createQuizReport,
+  getAllQuizReports,
+  getAllQuizReportsForPet,
+} = require("./controllers/health-controller/quizController");
 const { verifyToken, authorizeRole } = require("../middleware/authMiddleware");
 
 petRouter.post("/pets", verifyToken, authorizeRole("owner"), createPet);
@@ -30,7 +35,7 @@ petRouter.get(
 petRouter.get(
   "/pets/:pid",
   verifyToken,
-  authorizeRole("owner", "admin"),
+  authorizeRole("owner", "admin", "vet"),
   getOnePet
 );
 
@@ -84,5 +89,22 @@ petRouter.get(
   authorizeRole("vet", "owner", "admin"),
   getOneAppointment
 );
-
+petRouter.post(
+  "/quiz-report",
+  verifyToken,
+  authorizeRole("owner"),
+  createQuizReport
+);
+petRouter.get(
+  "/quiz-report",
+  verifyToken,
+  authorizeRole("owner", "admin"),
+  getAllQuizReports
+);
+petRouter.get(
+  "/quiz-report/:pid",
+  verifyToken,
+  authorizeRole("owner", "admin", "vet"),
+  getAllQuizReportsForPet
+);
 module.exports = petRouter;

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-
+import Lottie from "lottie-react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -7,7 +7,9 @@ import AppointmentForm from "../AppointmentForm";
 import AppointmentView from "../AppointmentView";
 import AppContext from "../../state/AppContext";
 import AppointmentsAdminView from "../AppointmentsAdminView/AppointmentsAdminView";
-
+import CatStanding from "../../assets/animations/cat-standing.json";
+import CatFalling from "../../assets/animations/cat-falling.json";
+import Calendar from "../../assets/animations/calendar.json";
 const Appointments = () => {
   const [isAddingAppointment, setIsAddingAppointment] = useState(false);
   const [appointments, setAppointments] = useState([]);
@@ -72,58 +74,93 @@ const Appointments = () => {
             <AppointmentView />
           </Box>
         ) : isAddingAppointment & formState.isVisible ? (
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <AppointmentForm
-              isUpdating={formState.isUpdating}
-              appointment={formState.appointment}
-              onSave={() => {
-                closeForm();
+          <>
+            <Box
+              sx={{
+                position: "fixed",
+                top: 52,
+                left: 400,
+                width: 250,
+                height: 250,
+                zIndex: 1300,
+                pointerEvents: "none",
+                userSelect: "none",
               }}
-            />
-          </Box>
+            >
+              <Lottie
+                animationData={CatFalling}
+                loop
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Box>
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <AppointmentForm
+                isUpdating={formState.isUpdating}
+                appointment={formState.appointment}
+                onSave={() => {
+                  closeForm();
+                }}
+              />
+            </Box>
+          </>
         ) : globalState.user?.data?.role === "admin" ? (
           <AppointmentsAdminView />
         ) : (
-          <Stack
-            direction="row"
-            spacing={12}
-            sx={{
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            <Button
-              variant="contained"
+          <>
+            <Box
               sx={{
-                borderRadius: "30px",
-                backgroundColor: "green",
-                width: "200px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                gap: 4,
               }}
-              onClick={handleSeeAppointmentClick}
             >
-              See appointments
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                borderRadius: "30px",
-                backgroundColor: "green",
-                width: "200px",
-              }}
-              onClick={handleAddAppointmentClick}
-            >
-              Add appointment
-            </Button>
-          </Stack>
+              <Stack direction="row" spacing={12}>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Lottie
+                    animationData={CatStanding}
+                    style={{ width: 131 }}
+                    loop
+                  />
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: "30px",
+                      backgroundColor: "green",
+                      width: "200px",
+                    }}
+                    onClick={handleSeeAppointmentClick}
+                  >
+                    See appointments
+                  </Button>
+                </Box>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Lottie animationData={Calendar} style={{ width: 70 }} loop />
+                  <Button
+                    variant="contained"
+                    sx={{
+                      borderRadius: "30px",
+                      backgroundColor: "green",
+                      width: "200px",
+                    }}
+                    onClick={handleAddAppointmentClick}
+                  >
+                    Add appointment
+                  </Button>
+                </Box>
+              </Stack>
+            </Box>
+          </>
         )}
       </Box>
     </>

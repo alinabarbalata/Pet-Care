@@ -3,7 +3,6 @@ import { useState, useEffect, useContext } from "react";
 import AppointmentCard from "../AppointmentCard/AppointmentCard";
 import AppointmentForm from "../AppointmentForm";
 import AppContext from "../../state/AppContext";
-
 import Box from "@mui/material/Box";
 const AppointmentView = () => {
   const [appointments, setAppointments] = useState([]);
@@ -56,50 +55,54 @@ const AppointmentView = () => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        borderRadius: 2,
-        boxShadow: 3,
-        overflowY: "auto",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      {formState.isUpdating ? (
-        <>
-          <AppointmentForm
-            isUpdating={formState.isUpdating}
-            appointment={formState.appointment}
-            onSave={() => {
-              closeForm();
-              refreshAppointments();
-            }}
-          />
-        </>
-      ) : (
-        appointments.map((appointment) => (
-          <AppointmentCard
-            key={appointment._id}
-            appointment={appointment}
-            onUpdateStatus={() => {
-              refreshAppointments();
-            }}
-            onEdit={(appointment) => {
-              openUpdateForm(appointment);
-            }}
-            isUpdating={
-              formState.isUpdating &&
-              formState.appointment?._id === appointment._id
-            }
-            statuses={statuses}
-            statusColors={statusColors}
-          />
-        ))
-      )}
-    </Box>
+    <>
+      <Box
+        sx={{
+          width: "100%",
+          borderRadius: 2,
+          boxShadow: 3,
+          overflowY: "auto",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {formState.isUpdating ? (
+          <>
+            <AppointmentForm
+              isUpdating={formState.isUpdating}
+              appointment={formState.appointment}
+              onSave={() => {
+                closeForm();
+                refreshAppointments();
+              }}
+            />
+          </>
+        ) : (
+          appointments.map((appointment) => (
+            <>
+              <AppointmentCard
+                key={appointment._id}
+                appointment={appointment}
+                onUpdateStatus={() => {
+                  refreshAppointments();
+                }}
+                onEdit={(appointment) => {
+                  openUpdateForm(appointment);
+                }}
+                isUpdating={
+                  formState.isUpdating &&
+                  formState.appointment?._id === appointment._id
+                }
+                statuses={statuses}
+                statusColors={statusColors}
+              />
+            </>
+          ))
+        )}
+      </Box>
+    </>
   );
 };
 export default AppointmentView;

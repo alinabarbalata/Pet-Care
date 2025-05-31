@@ -9,6 +9,9 @@ import { Routes, Route } from "react-router-dom";
 import Box from "@mui/material/Box";
 import PetCardView from "../PetCardView";
 import AppointmentCardFromURL from "../AppointmentCardFromURL";
+import HealthAssessmentPage from "../HealthAssessmentPage";
+import HealthQuiz from "../HealthQuiz/HealthQuizForm";
+import HomePage from "../HomePage/HomePage";
 
 const Dashboard = () => {
   return (
@@ -27,6 +30,7 @@ const Dashboard = () => {
         }}
       >
         <Routes>
+          <Route path="/" element={<HomePage />} />
           <Route path="mypets" element={<MyPets />} />
           <Route path="mypets/:pid" element={<PetCardView />} />
           <Route path="appointments" element={<Appointments />} />
@@ -34,6 +38,8 @@ const Dashboard = () => {
             path="appointments/:pid/:aid"
             element={<AppointmentCardFromURL />}
           />
+          <Route path="healthtracker" element={<HealthAssessmentPage />} />
+          <Route path="healthtracker/quiz" element={<HealthQuiz />} />
         </Routes>
       </Box>
     </Box>

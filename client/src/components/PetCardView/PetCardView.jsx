@@ -7,16 +7,19 @@ import {
   ListItemIcon,
   ListItemText,
   Chip,
+  Divider,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import blackCat from "../../assets/black-cat.jpg";
 import { useParams } from "react-router-dom";
 import AppContext from "../../state/AppContext";
+import HealthReportView from "../HealthReportView/HealthReportView";
 
 const PetCardView = () => {
   const { pid } = useParams();
   const [pet, setPet] = useState(null);
   const [appointments, setAppointments] = useState([]);
+  const [reports, setReports] = useState([]);
   const globalState = useContext(AppContext);
   const navigate = useNavigate();
   const statusColors = {
@@ -42,8 +45,19 @@ const PetCardView = () => {
       );
       setAppointments(appointmentsForPet);
     };
+    const fetchReportsForPet = async () => {
+      const reportsForPet = await globalState.health.getAllQuizReportsForPet(
+        pid
+      );
+      console.log(
+        "Response for get all reports for one pet in PetCardView",
+        reportsForPet
+      );
+      setReports(reportsForPet);
+    };
     fetchOnePet();
     fetchAppointmentsForPet();
+    fetchReportsForPet();
   }, [pid]);
 
   const handleClick = (appointment) => {
@@ -119,7 +133,8 @@ const PetCardView = () => {
                     boxShadow: 4,
                     padding: 1,
                     backgroundColor: "#f9f9f9",
-                    overflow: "hidden",
+                    maxHeight: "100vh",
+                    overflowY: "auto",
                   }}
                 >
                   <Box
@@ -137,7 +152,12 @@ const PetCardView = () => {
             </Box>
           </Box>
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" fontWeight="bold" color="#343332">
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              color="#343332"
+              sx={{ fontFamily: "'Times New Roman', Times, serif" }}
+            >
               Appointments History
             </Typography>
             <List>
@@ -145,7 +165,11 @@ const PetCardView = () => {
                 <ListItem
                   key={appointment._id}
                   button
-                  onClick={() => handleClick(appointment)}
+                  onClick={
+                    !globalState.user?.data?.role === "owner"
+                      ? () => handleClick(appointment)
+                      : undefined
+                  }
                   sx={{
                     cursor: "pointer",
                     display: "flex",
@@ -158,7 +182,10 @@ const PetCardView = () => {
                   <ListItemText
                     primary={appointment.vet.email}
                     secondary={appointment.date}
-                    sx={{ flexGrow: 1 }}
+                    sx={{
+                      flexGrow: 1,
+                      fontFamily: "'Times New Roman', Times, serif",
+                    }}
                   />
                   <Chip
                     label={appointment.status.name}
@@ -167,11 +194,33 @@ const PetCardView = () => {
                       marginLeft: 2,
                       backgroundColor: statusColors[appointment.status.name],
                       color: "white",
+                      fontFamily: "'Times New Roman', Times, serif",
                     }}
                   />
                 </ListItem>
               ))}
             </List>
+          </Box>
+          <Box sx={{ p: 2, pt: 0 }}>
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              color="#343332"
+              sx={{ fontFamily: "'Times New Roman', Times, serif" }}
+            >
+              Health Reports History
+            </Typography>{" "}
+            <Divider
+              sx={{
+                mt: 2,
+                borderColor: "grey.400",
+                borderBottomWidth: 1,
+                width: "100%",
+              }}
+            />
+            {reports.map((report) => (
+              <HealthReportView key={report._id} report={report} />
+            ))}
           </Box>
         </Box>
       ) : (

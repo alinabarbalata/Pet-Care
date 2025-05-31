@@ -72,7 +72,7 @@ const PetForm = () => {
   return (
     <Box
       sx={{
-        width: "40%",
+        width: "100%",
         bgcolor: "background.paper",
         p: 2,
         borderRadius: 2,

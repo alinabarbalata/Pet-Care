@@ -3,7 +3,9 @@ import PetCard from "../PetCard";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import PetForm from "../PetForm";
-import Box from "@mui/material/Box";
+import Lottie from "lottie-react";
+import CatSleeping from "../../assets/animations/cat-sleeping.json";
+import { Box, Typography } from "@mui/material";
 import AppContext from "../../state/AppContext";
 import PetsAdminView from "../PetsAdminView";
 const MyPets = () => {
@@ -40,7 +42,8 @@ const MyPets = () => {
           padding: "20px",
           width: "100%",
           boxSizing: "border-box",
-          overflowX: "auto",
+          overflowY: "auto",
+          maxHeight: "100vh",
         }}
       >
         {globalState.user.data.role === "owner" ? (
@@ -51,10 +54,56 @@ const MyPets = () => {
                 height: "100%",
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
+                alignItems: "flex-start",
+                gap: 10,
+                p: 3,
+                boxSizing: "border-box",
               }}
             >
-              <PetForm />
+              <Box
+                sx={{
+                  flex: "1 1 50%",
+                  px: 4,
+                  color: "#1B5E20",
+                  fontFamily: `"Times New Roman", Times, serif`,
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  gutterBottom
+                  sx={{ fontWeight: 700, letterSpacing: "0.05em" }}
+                >
+                  Add Your Pet
+                </Typography>
+
+                <Typography
+                  variant="h6"
+                  component="p"
+                  sx={{
+                    maxWidth: 600,
+                    mb: 4,
+                    fontWeight: 500,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Please fill out the form with details about your pet including
+                  name, breed, and age. Keeping the profile updated helps us
+                  provide the best care possible.
+                  <br />
+                  <br /> Need help? Contact our support team anytime.
+                </Typography>
+                <Box sx={{ width: 300, ml: 9 }}>
+                  <Lottie animationData={CatSleeping} loop={true} />
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  px: 4,
+                  flex: "1 1 50%",
+                }}
+              >
+                <PetForm />
+              </Box>
             </Box>
           ) : (
             <>
