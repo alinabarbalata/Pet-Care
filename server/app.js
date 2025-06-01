@@ -12,13 +12,13 @@ dotenv.config();
 
 const app = express();
 
-// Add the log here to confirm path
 console.log("Server is starting...");
 console.log("Path to client:", path.join(__dirname, "../client"));
 
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "../client")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 mongoose
   .connect(process.env.DB_URI)

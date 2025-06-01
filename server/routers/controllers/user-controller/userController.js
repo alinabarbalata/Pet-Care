@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../../../models/user-models/user");
 const jwt = require("jsonwebtoken");
-
+const Pet = require("../../../models/pet-models/pet");
 const register = async (req, res) => {
   try {
     const { email, password, role } = req.body;
@@ -58,4 +58,20 @@ const getAllVets = async (req, res) => {
   }
 };
 
-module.exports = { register, login, getAllVets };
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const pets = await Pet.find({ owner: userId });
+    for (const pet of pets) {
+      await pet.deleteOne();
+    }
+
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ message: "Account and related pets deleted." });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete account", error });
+  }
+};
+module.exports = { register, login, getAllVets, deleteAccount };

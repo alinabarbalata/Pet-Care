@@ -97,7 +97,7 @@ const AppointmentForm = ({ isUpdating, appointment, onSave }) => {
         notes
       );
     }
-    //onSave();
+    onSave();
   };
   return (
     <>

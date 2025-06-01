@@ -13,6 +13,7 @@ import AppointmentStore from "./state/stores/AppointmentStore";
 import HealthStore from "./state/stores/HealthStore";
 
 import "./App.css";
+import HomePage from "./components/HomePage/HomePage";
 
 function App() {
   const [userStore] = useState(new UserStore());

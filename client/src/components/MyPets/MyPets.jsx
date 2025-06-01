@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import PetForm from "../PetForm";
 import Lottie from "lottie-react";
-import CatSleeping from "../../assets/animations/cat-sleeping.json";
+import CatCleaning from "../../assets/animations/cat-cleaning.json";
 import { Box, Typography } from "@mui/material";
 import AppContext from "../../state/AppContext";
 import PetsAdminView from "../PetsAdminView";
@@ -13,20 +13,24 @@ const MyPets = () => {
   const [isAddingPet, setIsAddingPet] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [pets, setPets] = useState([]);
+  const fetchPets = async () => {
+    const resp = await globalState.pet.getAllPets();
+    console.log("Fetched pets: ", resp);
+    setPets(resp);
+    setIsLoading(false);
+  };
   useEffect(() => {
-    const fetchPets = async () => {
-      if (globalState.pet.data.pets.length === 0) {
-        await globalState.pet.getAllPets();
-      }
-
-      setIsLoading(false);
-    };
-
     fetchPets();
-  }, [globalState.pet]);
+  }, []);
 
   const handleAddPetClick = () => {
     setIsAddingPet(true);
+  };
+
+  const handlePetCreated = async () => {
+    setIsAddingPet(false);
+    await fetchPets();
   };
   if (isLoading) {
     return <div>Loading pets...</div>;
@@ -92,8 +96,8 @@ const MyPets = () => {
                   <br />
                   <br /> Need help? Contact our support team anytime.
                 </Typography>
-                <Box sx={{ width: 300, ml: 9 }}>
-                  <Lottie animationData={CatSleeping} loop={true} />
+                <Box sx={{ width: 400 }}>
+                  <Lottie animationData={CatCleaning} loop={true} />
                 </Box>
               </Box>
               <Box
@@ -102,7 +106,7 @@ const MyPets = () => {
                   flex: "1 1 50%",
                 }}
               >
-                <PetForm />
+                <PetForm onPetCreated={handlePetCreated} />
               </Box>
             </Box>
           ) : (
@@ -124,7 +128,7 @@ const MyPets = () => {
                 </Button>
               </Stack>
 
-              {globalState.pet.data.pets.map((pet) => (
+              {pets.map((pet) => (
                 <PetCard key={pet._id} pet={pet} />
               ))}
             </>

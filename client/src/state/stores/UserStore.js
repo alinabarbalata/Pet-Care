@@ -1,5 +1,4 @@
 import { SERVER } from "../../../config/config";
-
 class UserStore {
   constructor() {
     this.data = {};
@@ -75,6 +74,35 @@ class UserStore {
     } catch (err) {
       console.log("Error during logout:", err);
       alert("Logout error. Please try again.");
+    }
+  }
+
+  async deleteAccount() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${SERVER}/auth/account`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw response;
+      }
+
+      this.data = {};
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+
+      alert("Your account has been deleted.");
+      console.log("Account deleted successfully.");
+      this.logout();
+    } catch (err) {
+      console.error("Error deleting account:", err.message);
+      alert("Error deleting account. Please try again.");
     }
   }
 }

@@ -8,23 +8,15 @@ class PetStore {
       colors: [],
     };
   }
-  async createPet(name, age, breed, color, type, vaccinated) {
+  async createPet(formData) {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(`${SERVER}/api/pets`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          name,
-          age,
-          breed,
-          color,
-          type,
-          vaccinated,
-        }),
+        body: formData,
       });
       if (!response.ok) {
         throw response;

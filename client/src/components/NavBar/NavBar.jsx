@@ -15,7 +15,7 @@ const Navbar = ({ showLoginForm }) => {
     <header>
       <h2 className="logo">Pet Care</h2>
       <nav className="navigation">
-        <a href="#">Home</a>
+        <a onClick={() => navigate("/dashboard")}>Home</a>
         <a href="#">About</a>
         <a href="#">Contact</a>
         {user.data.token ? (

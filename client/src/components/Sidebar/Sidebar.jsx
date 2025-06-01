@@ -7,6 +7,11 @@ import "./Sidebar.css";
 const Sidebar = () => {
   const { user } = useContext(AppContext);
   const role = user?.data?.role;
+
+  const handleDeleteAccount = async () => {
+    await user.deleteAccount();
+    window.location.reload();
+  };
   return (
     <div className="sidebar">
       <ul className="menu">
@@ -25,7 +30,9 @@ const Sidebar = () => {
               <Link to="/dashboard/community">💬 Community</Link>
             </li>
             <li>
-              <Link to="/dashboard/settings">⚙️ Settings</Link>
+              <button className="menu-button" onClick={handleDeleteAccount}>
+                🗑️ Delete account
+              </button>
             </li>
           </>
         )}
@@ -36,7 +43,9 @@ const Sidebar = () => {
               <Link to="/dashboard/appointments">📅 Appointments</Link>
             </li>
             <li>
-              <Link to="/dashboard/settings">⚙️ Settings</Link>
+              <button className="menu-button" onClick={handleDeleteAccount}>
+                🗑️ Delete account
+              </button>
             </li>
           </>
         )}

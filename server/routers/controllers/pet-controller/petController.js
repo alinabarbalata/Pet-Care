@@ -4,6 +4,12 @@ const createPet = async (req, res) => {
   try {
     const { name, age, breed, color, type, vaccinated } = req.body;
     const ownerId = req.user._id;
+
+    let photoUrl = "";
+    if (req.file) {
+      photoUrl = `/uploads/${req.file.filename}`;
+    }
+
     const newPet = new Pet({
       name,
       age,
@@ -12,6 +18,7 @@ const createPet = async (req, res) => {
       type,
       vaccinated,
       owner: ownerId,
+      photoUrl,
     });
 
     await newPet.save();
@@ -88,7 +95,8 @@ const deletePet = async (req, res) => {
     if (!pet) {
       return res.status(404).json({ message: "Pet not found" });
     }
-    await Pet.findByIdAndDelete(req.params.pid);
+    await pet.deleteOne();
+
     res.status(200).json({ message: "Pet deleted successfully", pet });
   } catch (error) {
     console.error("Error in deletePet method:", error);

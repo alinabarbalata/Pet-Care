@@ -43,10 +43,7 @@ const Appointments = () => {
       isUpdating: false,
       appointment: null,
     });
-  };
-  const fetchAppointments = async () => {
-    const appointmentsData = await globalState.appointment.getAllAppointments();
-    setAppointments(appointmentsData);
+    setIsAddingAppointment(false);
   };
   return (
     <>
@@ -73,7 +70,7 @@ const Appointments = () => {
           >
             <AppointmentView />
           </Box>
-        ) : isAddingAppointment & formState.isVisible ? (
+        ) : isAddingAppointment && formState.isVisible ? (
           <>
             <Box
               sx={{

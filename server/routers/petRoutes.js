@@ -1,5 +1,6 @@
 const express = require("express");
 const petRouter = express.Router();
+const upload = require("../middleware/multerConfig");
 const {
   createAppointment,
   updateAppointment,
@@ -24,7 +25,13 @@ const {
 } = require("./controllers/health-controller/quizController");
 const { verifyToken, authorizeRole } = require("../middleware/authMiddleware");
 
-petRouter.post("/pets", verifyToken, authorizeRole("owner"), createPet);
+petRouter.post(
+  "/pets",
+  verifyToken,
+  authorizeRole("owner"),
+  upload.single("photo"),
+  createPet
+);
 petRouter.put("/pets/:pid", verifyToken, authorizeRole("owner"), updatePet);
 petRouter.get(
   "/pets",

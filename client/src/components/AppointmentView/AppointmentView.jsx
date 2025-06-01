@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect, useContext } from "react";
 
 import AppointmentCard from "../AppointmentCard/AppointmentCard";
@@ -81,7 +82,7 @@ const AppointmentView = () => {
           </>
         ) : (
           appointments.map((appointment) => (
-            <>
+            <React.Fragment key={appointment._id}>
               <AppointmentCard
                 key={appointment._id}
                 appointment={appointment}
@@ -98,7 +99,7 @@ const AppointmentView = () => {
                 statuses={statuses}
                 statusColors={statusColors}
               />
-            </>
+            </React.Fragment>
           ))
         )}
       </Box>

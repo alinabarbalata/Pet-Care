@@ -3,6 +3,7 @@ const {
   register,
   login,
   getAllVets,
+  deleteAccount,
 } = require("./controllers/user-controller/userController");
 const { verifyToken, authorizeRole } = require("../middleware/authMiddleware");
 const authRouter = express.Router();
@@ -14,5 +15,11 @@ authRouter.get(
   verifyToken,
   authorizeRole("owner", "admin"),
   getAllVets
+);
+authRouter.delete(
+  "/account",
+  verifyToken,
+  authorizeRole("owner", "vet", "admin"),
+  deleteAccount
 );
 module.exports = authRouter;

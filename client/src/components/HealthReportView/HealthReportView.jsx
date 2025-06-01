@@ -42,7 +42,11 @@ const HealthReportView = ({ report }) => {
           </Typography>
         )}
         {quizDiagnoses.map((diagnosis) => (
-          <ListItem alignItems="flex-start" sx={{ display: "block" }}>
+          <ListItem
+            key={diagnosis._id}
+            alignItems="flex-start"
+            sx={{ display: "block" }}
+          >
             <Box
               sx={{
                 display: "flex",

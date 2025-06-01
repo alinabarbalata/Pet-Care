@@ -1,6 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Stack, Box, Typography } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import {
   List,
   ListItem,
@@ -10,7 +13,6 @@ import {
   Divider,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import blackCat from "../../assets/black-cat.jpg";
 import { useParams } from "react-router-dom";
 import AppContext from "../../state/AppContext";
 import HealthReportView from "../HealthReportView/HealthReportView";
@@ -60,6 +62,10 @@ const PetCardView = () => {
     fetchReportsForPet();
   }, [pid]);
 
+  const handleDeletePet = async () => {
+    await globalState.pet.deletePet(pid);
+    navigate(`/dashboard/mypets`);
+  };
   const handleClick = (appointment) => {
     console.log("Clicked appointment: ", appointment);
     navigate(`/dashboard/appointments/${pet._id}/${appointment._id}`);
@@ -139,7 +145,7 @@ const PetCardView = () => {
                 >
                   <Box
                     component="img"
-                    src={blackCat}
+                    src={`http://localhost:5000${pet.photoUrl}`}
                     alt="Pet"
                     sx={{
                       width: 150,
@@ -148,6 +154,22 @@ const PetCardView = () => {
                     }}
                   />
                 </Box>
+                <IconButton
+                  size="small"
+                  onClick={handleDeletePet}
+                  sx={{
+                    mt: 1,
+                    backgroundColor: "white",
+                    position: "absolute",
+                    top: 200,
+                    right: 100,
+                    "&:hover": {
+                      backgroundColor: "#ffebee",
+                    },
+                  }}
+                >
+                  <DeleteIcon sx={{ fontSize: 18, color: "#d32f2f" }} />
+                </IconButton>
               </Box>
             </Box>
           </Box>
@@ -166,7 +188,7 @@ const PetCardView = () => {
                   key={appointment._id}
                   button
                   onClick={
-                    !globalState.user?.data?.role === "owner"
+                    globalState.user?.data?.role === "owner"
                       ? () => handleClick(appointment)
                       : undefined
                   }

@@ -18,7 +18,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
 
-const PetForm = () => {
+const PetForm = ({ onPetCreated }) => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -28,6 +28,7 @@ const PetForm = () => {
   const [vaccinated, setVaccinated] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const { pet } = useContext(AppContext);
+  const [photoFile, setPhotoFile] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,17 +57,30 @@ const PetForm = () => {
     fetchData();
   }, [pet]);
 
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setPhotoFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e) => {
-    await pet.createPet(
-      name,
-      age,
-      selectedBreed,
-      selectedColor,
-      "cat",
-      vaccinated
-    );
-    setIsVisible(false);
-    window.location.reload();
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("age", age);
+    formData.append("breed", selectedBreed);
+    formData.append("color", selectedColor);
+    formData.append("type", "cat");
+    formData.append("vaccinated", vaccinated);
+
+    if (photoFile) {
+      formData.append("photo", photoFile);
+    }
+    await pet.createPet(formData);
+    if (onPetCreated) {
+      onPetCreated();
+    }
   };
 
   return (
@@ -82,11 +96,9 @@ const PetForm = () => {
       <Stack spacing={1} sx={{ p: 5, px: 7 }}>
         <ThemeProvider theme={Theme}>
           <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
-            <FormHelperText id="outlined-weight-helper-text">
-              Name of the pet
-            </FormHelperText>
+            <FormHelperText id="pet-name">Name of the pet</FormHelperText>
             <OutlinedInput
-              id="outlined-adornment-weight"
+              id="paw-icon"
               value={name}
               onChange={(e) => setName(e.target.value)}
               endAdornment={
@@ -97,11 +109,9 @@ const PetForm = () => {
             />
           </FormControl>
           <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
-            <FormHelperText id="outlined-weight-helper-text">
-              Age
-            </FormHelperText>
+            <FormHelperText id="pet-age">Age</FormHelperText>
             <OutlinedInput
-              id="outlined-adornment-weight"
+              id="heart-icon"
               type="number"
               value={age}
               onChange={(e) => setAge(e.target.value)}
@@ -128,12 +138,9 @@ const PetForm = () => {
           </FormControl>
 
           <FormControl sx={{ m: 1 }} variant="outlined">
-            <FormHelperText id="outlined-weight-helper-text">
-              Breed
-            </FormHelperText>
+            <FormHelperText id="pet-breed">Breed</FormHelperText>
             <Select
-              labelId="demo-customized-select-label"
-              id="demo-customized-select"
+              id="select-breed"
               value={selectedBreed}
               onChange={(e) => setSelectedBreed(e.target.value)}
             >
@@ -148,12 +155,9 @@ const PetForm = () => {
             </Select>
           </FormControl>
           <FormControl sx={{ m: 1 }} variant="outlined">
-            <FormHelperText id="outlined-weight-helper-text">
-              Color
-            </FormHelperText>
+            <FormHelperText id="pet-color">Color</FormHelperText>
             <Select
-              labelId="demo-customized-select-label"
-              id="demo-customized-select"
+              id="select-color"
               value={selectedColor}
               onChange={(e) => setSelectedColor(e.target.value)}
             >
@@ -170,7 +174,7 @@ const PetForm = () => {
           <FormControl>
             <RadioGroup
               row
-              name="row-radio-buttons-group"
+              name="rg-vaccinated"
               value={vaccinated}
               onChange={(e) => setVaccinated(e.target.value === "true")}
               sx={{
@@ -190,6 +194,15 @@ const PetForm = () => {
                 label="Not vaccinated"
               />
             </RadioGroup>
+          </FormControl>
+          <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
+            <FormHelperText>Upload pet photo</FormHelperText>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ marginBottom: "8px" }}
+            />
           </FormControl>
         </ThemeProvider>
         <Button

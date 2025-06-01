@@ -23,8 +23,8 @@ const PetCard = ({ pet }) => {
             sx={{ height: 200 }}
             component="img"
             height="140"
-            image="/src/assets/black-cat.jpg"
-            alt="pet-img"
+            image={`http://localhost:5000${pet.photoUrl}`}
+            alt={`${pet.name} photo`}
           />
           <CardContent sx={{ backgroundColor: "rgb(145, 142, 99) " }}>
             <Typography gutterBottom variant="h5" component="div">

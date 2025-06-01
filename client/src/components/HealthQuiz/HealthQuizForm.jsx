@@ -220,9 +220,8 @@ const HealthQuiz = () => {
               }}
             >
               {symptoms.map((symptom) => (
-                <FormGroup>
+                <FormGroup key={symptom._id}>
                   <FormControlLabel
-                    key={symptom._id}
                     control={
                       <Checkbox
                         color="success"
