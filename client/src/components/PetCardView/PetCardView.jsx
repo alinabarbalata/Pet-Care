@@ -63,8 +63,10 @@ const PetCardView = () => {
   }, [pid]);
 
   const handleDeletePet = async () => {
-    await globalState.pet.deletePet(pid);
-    navigate(`/dashboard/mypets`);
+    if (window.confirm("Are you sure you want to delete this pet?")) {
+      await globalState.pet.deletePet(pid);
+      navigate(`/dashboard/mypets`);
+    }
   };
   const handleClick = (appointment) => {
     console.log("Clicked appointment: ", appointment);
@@ -173,7 +175,7 @@ const PetCardView = () => {
               </Box>
             </Box>
           </Box>
-          <Box sx={{ p: 2 }}>
+          <Box sx={{ p: 2, backgroundColor: "#FFFFFF" }}>
             <Typography
               variant="h6"
               fontWeight="bold"
@@ -223,7 +225,7 @@ const PetCardView = () => {
               ))}
             </List>
           </Box>
-          <Box sx={{ p: 2, pt: 0 }}>
+          <Box sx={{ p: 2, pt: 0, backgroundColor: "#FFFFFF" }}>
             <Typography
               variant="h6"
               fontWeight="bold"

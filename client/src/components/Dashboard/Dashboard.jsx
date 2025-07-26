@@ -26,7 +26,7 @@ const Dashboard = () => {
           top: "10vh",
           width: "80vw",
           height: "90vh",
-          backgroundColor: "#E6F2E7",
+          backgroundColor: "#e3f7e5",
         }}
       >
         <Routes>

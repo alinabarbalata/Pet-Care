@@ -9,8 +9,14 @@ const Sidebar = () => {
   const role = user?.data?.role;
 
   const handleDeleteAccount = async () => {
-    await user.deleteAccount();
-    window.location.reload();
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? Everything related to it will be forever deleted from our servers"
+      )
+    ) {
+      await user.deleteAccount();
+      window.location.reload();
+    }
   };
   return (
     <div className="sidebar">
@@ -18,7 +24,7 @@ const Sidebar = () => {
         {(role === "owner" || role === "admin") && (
           <>
             <li>
-              <Link to="/dashboard/mypets">🐾 My Pets</Link>
+              <Link to="/dashboard/mypets">🐾 Pets</Link>
             </li>
             <li>
               <Link to="/dashboard/appointments">📅 Appointments</Link>

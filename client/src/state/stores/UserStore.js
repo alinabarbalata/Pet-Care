@@ -33,7 +33,6 @@ class UserStore {
         "Role: ",
         this.data.role
       );
-      alert("LOGIN SUCCESSFUL!");
     } catch (err) {
       console.log("Response status:", err.status);
       console.log("Response body:", await err.json());

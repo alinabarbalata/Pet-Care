@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Lottie from "lottie-react";
 import CatScratching from "../../assets/animations/cat-scratching.json";
-import { use } from "react";
+import AppContext from "../../state/AppContext";
 const HomePage = () => {
   const navigate = useNavigate();
+  const globalContext = useContext(AppContext);
+
+  const getWelcomeText = () => {
+    if (globalContext.user.data.role === "owner") {
+      return "Manage your pets with ease — track appointments, monitor their health, and keep everything organized in one place. Start by selecting a section in the sidebar.";
+    } else if (globalContext.user.data.role === "vet") {
+      return "Stay on top of your schedule — view and manage your upcoming appointments with pet owners in one convenient place.";
+    } else if (globalContext.user.data.role === "admin") {
+      return "Oversee and manage the entire Pet Care platform — monitor user activity, manage system data, and ensure everything runs smoothly. Start by selecting a section in the sidebar.";
+    }
+  };
+
+  const handleClick = () => {
+    if (
+      globalContext.user.data.role === "owner" ||
+      globalContext.user.data.role === "admin"
+    ) {
+      navigate(`/dashboard/mypets`);
+    } else if (globalContext.user.data.role === "vet") {
+      navigate("dashboard/appointments");
+    }
+  };
   return (
     <Box
       sx={{
@@ -36,9 +58,7 @@ const HomePage = () => {
         component="p"
         sx={{ maxWidth: 600, mb: 4, fontWeight: 500, lineHeight: 1.6 }}
       >
-        Manage your pets with ease — track appointments, monitor their health,
-        and keep everything organized in one place. Start by selecting a section
-        in the sidebar.
+        {getWelcomeText()}
       </Typography>
       <Box sx={{ width: 300, mb: 3 }}>
         <Lottie animationData={CatScratching} loop={true} />
@@ -60,9 +80,7 @@ const HomePage = () => {
               "0px 6px 14px rgba(76, 175, 80, 0.8), 0px 0px 25px rgba(139, 195, 74, 0.6)",
           },
         }}
-        onClick={() => {
-          navigate(`/dashboard/mypets`);
-        }}
+        onClick={handleClick}
       >
         Get Started
       </Button>

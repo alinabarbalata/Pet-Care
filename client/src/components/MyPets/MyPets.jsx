@@ -37,21 +37,21 @@ const MyPets = () => {
   }
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "flex-start",
-          gap: "30px",
-          padding: "20px",
-          width: "100%",
-          boxSizing: "border-box",
-          overflowY: "auto",
-          maxHeight: "100vh",
-        }}
-      >
-        {globalState.user.data.role === "owner" ? (
-          isAddingPet ? (
+      {globalState.user.data.role === "owner" && (
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+            gap: "30px",
+            padding: "20px",
+            width: "100%",
+            boxSizing: "border-box",
+            overflowY: "auto",
+            maxHeight: "100vh",
+          }}
+        >
+          {isAddingPet ? (
             <Box
               sx={{
                 width: "100%",
@@ -132,11 +132,10 @@ const MyPets = () => {
                 <PetCard key={pet._id} pet={pet} />
               ))}
             </>
-          )
-        ) : globalState.user.data.role === "admin" ? (
-          <PetsAdminView />
-        ) : null}
-      </Box>
+          )}
+        </Box>
+      )}
+      {globalState.user.data.role === "admin" ? <PetsAdminView /> : null}
     </>
   );
 };

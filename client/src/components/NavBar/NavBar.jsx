@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import AppContext from "../../state/AppContext";
-
 const Navbar = ({ showLoginForm }) => {
   const { user } = useContext(AppContext);
   const navigate = useNavigate();

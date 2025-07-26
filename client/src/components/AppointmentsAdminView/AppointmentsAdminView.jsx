@@ -50,7 +50,7 @@ const AppointmentsAdminView = () => {
         return params.row.status.name;
       },
     },
-    { field: "notes", headerName: "Notes", width: 150 },
+    { field: "notes", headerName: "Notes", width: 150, editable: true },
     { field: "createdAt", headerName: "Created At", width: 180 },
   ];
   return (
@@ -74,7 +74,6 @@ const AppointmentsAdminView = () => {
         >
           Manage Appointments
         </Typography>
-        <Typography>Another element</Typography>
       </Stack>
 
       <Box
